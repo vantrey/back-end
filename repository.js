@@ -1,14 +1,15 @@
-const users = [
-    {"id": 1, "name": "Ann"},
-    {"id": 2, "name": "Ivan"},
-]
+const {readJsonFromFile, writeJsonToFile} = require('./fs-utils');
 
 const getUsers = () => {
-    return users
+
+    return readJsonFromFile('db');
 }
 
-const addUser = (name) => {
+const addUser = async (name) => {
+    let users = await getUsers();
     users.push({name: name})
+
+    return writeJsonToFile('db', users);
 }
 
 exports.getUsers = getUsers;

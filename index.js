@@ -1,43 +1,22 @@
-const http = require('http');
+const {getUsers, addUser} = require('./repository');
+const express = require('express');
+const users = require('./usersRouter')
 
-const {usersController} = require('./usersController');
+// create express app
+const app = express();
 
-const cors = (req, res) => {
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Request-Method', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-    res.setHeader('Access-Control-Allow-Headers', '*');
-    if (req.method === 'OPTIONS') {
-        res.writeHead(200);
-        res.end();
-        return true;
-    }
-    return false;
-};
+// as a base url
+app.use('/users', users)
 
-const server = http.createServer((req, res) => {
-
-    if (cors(req, res)) return;
-
-    switch (req.url) {
-        case '/users':
-            usersController(req, res);
-            break;
-
-        case '/lessons':
-            res.write(`tasks`);
-            break
-
-        default:
-            res.write('PAGE NOT FOUND');
-    }
-
-    res.end();
-
+app.get('/tasks', async (req, res) => {
+    res.send('tasks');
 });
 
-server.listen(7777);
+// добавляем перехватчик (middleware)
+app.use((req, res) => {
+    res.send(404);
+});
 
-console.log(http);
-
+app.listen(7777, () => {
+    console.log('example')
+});
